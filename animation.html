@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <audio
+      id="audio"
+      style="box-sizing: border-box; width: 100%"
+      controls
+    ></audio>
+    <div id="scene">
+      <canvas
+        width="3840"
+        height="2160"
+        id="canvas"
+        style="width: 100%"
+      ></canvas>
+    </div>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const base = params.get("baseUrl") || `http://localhost:13344/data`;
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const startTimestamp = Date.now();
+      const { width, height } = canvas;
+
+      const dataPromise = fetch(`${base}/vscode-themes.json`).then((r) =>
+        r.json()
+      );
+
+      dataPromise.then((x) => console.log(x));
+
+      async function frame() {
+        try {
+          await draw(audio.currentTime);
+        } finally {
+          requestAnimationFrame(frame);
+        }
+      }
+
+      const imageCache = new Map();
+
+      const gcImageCache = () => {
+        const entries = Array.from(imageCache.entries());
+        entries.sort((a, b) => a[1].lastUsed - b[1].lastUsed);
+
+        if (entries.length > 16) {
+          const toDelete = entries.slice(0, entries.length - 16);
+          for (const [key, value] of toDelete) {
+            imageCache.delete(key);
+          }
+        }
+      };
+
+      function ensureCacheEntry(data, beat) {
+        let entry = imageCache.get(beat);
+        if (!entry) {
+          const image = new Image();
+          image.crossOrigin = "anonymous";
+          const onLoadPromise = new Promise((resolve, reject) => {
+            image.addEventListener("load", () => {
+              console.log("Loaded", image.src);
+              entry.ready = true;
+              resolve();
+            });
+            image.addEventListener("error", reject);
+          });
+          image.src = `${base}/${data[beat].objectName}`;
+          entry = { image, lastUsed: Date.now(), ready: false, onLoadPromise };
+          imageCache.set(beat, entry);
+          gcImageCache();
+        }
+        entry.lastUsed = Date.now();
+        return entry;
+      }
+
+      async function draw(t) {
+        const data = await dataPromise;
+        let currentBeat = (t * 104) / 60;
+        let start = Math.min(Math.floor(currentBeat), data.length + 1);
+        const beatsToDraw = [];
+        const awaits = [];
+        const images = new Map();
+        for (let i = 8; i >= 0; i--) {
+          const beat = start - i;
+          if (beat < -1) continue;
+          if (beat >= data.length) continue;
+          beatsToDraw.push(beat);
+          if (beat >= 0) {
+            const entry = ensureCacheEntry(data, beat);
+            if (entry.ready) {
+              images.set(beat, entry.image);
+            } else {
+              awaits.push(
+                entry.onLoadPromise.then(() => {
+                  images.set(beat, entry.image);
+                })
+              );
+            }
+          }
+        }
+        for (let i = 0; i < 3; i++) {
+          if (start + i >= data.length) continue;
+          ensureCacheEntry(data, start + i);
+        }
+        await Promise.all(awaits);
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, width, height);
+        for (const beat of beatsToDraw) {
+          if (beat === -1) {
+            ctx.save();
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, width, height);
+            continue;
+          }
+          const beatStartTime = (beat * 60) / 104;
+          const timeOffset = t - beatStartTime;
+          ctx.save();
+          try {
+            drawItem(beat, timeOffset, images.get(beat), data[beat]);
+          } finally {
+            ctx.restore();
+          }
+        }
+      }
+      function drawItem(itemId, timeOffset, img, info) {
+        let slant = 256;
+        let xp = timeOffset * 0.1;
+        let p = 0.16 + 0.84 * Math.exp(-timeOffset * 0.5) ** 8 - xp;
+        let ty = xp * height + 1516;
+        let y = (1 - p) * height - slant;
+
+        ctx.beginPath();
+        // ctx.moveTo(x, height);
+        // ctx.lineTo(x + slant, 0);
+        // ctx.lineTo(x + slant + width, 0);
+        // ctx.lineTo(x + slant + width, height);
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y + slant);
+        ctx.lineTo(width, y + slant - height);
+        ctx.lineTo(0, y - height);
+        ctx.clip();
+
+        // Background
+        // ctx.fillStyle = `hsl(${itemId * 30},80%,64%)`;
+        // ctx.fillRect(0, 0, width, height);
+
+        // Image
+        if (img) {
+          ctx.drawImage(img, 0, 0, width, height);
+        }
+
+        try {
+          ctx.save();
+          ctx.letterSpacing = "0.04em";
+          ctx.translate(16, ty);
+          ctx.strokeStyle = "#0008";
+          ctx.lineWidth = 10;
+          ctx.miterLimit = 2;
+          ctx.fillStyle = "#fff";
+          ctx.shadowColor = "black";
+          ctx.shadowBlur = 12;
+          ctx.shadowOffsetX = 2;
+          ctx.shadowOffsetY = 2;
+
+          const drawText = (text, x, y) => {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(Math.atan2(slant, width));
+            ctx.fillText(text, 0, 0);
+            ctx.restore();
+          };
+
+          const topText = `#${itemId + 1} ${info.themeLabel}`;
+          const bottomText = `“${info.extensionDisplayName}” by ${info.publisherDisplayName}`;
+
+          ctx.font = "bold 48px sans-serif";
+          drawText(topText, 0, -32);
+          ctx.font = "bold 24px sans-serif";
+          drawText(bottomText, 0, 8);
+        } finally {
+          ctx.restore();
+        }
+
+        // Line
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y + slant);
+        ctx.strokeStyle = "#0008";
+        ctx.lineWidth = 10;
+        ctx.stroke();
+      }
+
+      // This function tells renderer about basic information about the video.
+      const fps = 60;
+      function getInfo() {
+        return {
+          fps,
+          numberOfFrames: Math.ceil(2898.941 * fps),
+        };
+      }
+
+      // This function will be called before rendering each frame of the video.
+      async function seekToFrame(frame) {
+        await draw(frame / fps);
+        return canvas.toDataURL("image/png");
+      }
+
+      if (params.get("render") === "1") {
+        const scene = document.getElementById("scene");
+        canvas.style.display = "block";
+        scene.setAttribute(
+          "style",
+          `position:absolute;top:0;left:0;width:${width}px;height:${height}px;overflow:hidden;background:#000`
+        );
+      } else {
+        audio.src = `${base}/bgm.m4a`;
+        requestAnimationFrame(frame);
+      }
+    </script>
+  </body>
+</html>

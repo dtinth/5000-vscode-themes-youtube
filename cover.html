@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="scene">
+      <canvas
+        width="3840"
+        height="2160"
+        id="canvas"
+        style="width: 100%"
+      ></canvas>
+    </div>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const base = params.get("baseUrl") || `http://localhost:13344/data`;
+
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const { width, height } = canvas;
+
+      const dataPromise = fetch(`${base}/vscode-themes.json`).then((r) =>
+        r.json()
+      );
+
+      const imageCache = new Map();
+
+      const gcImageCache = () => {
+        const entries = Array.from(imageCache.entries());
+        entries.sort((a, b) => a[1].lastUsed - b[1].lastUsed);
+
+        if (entries.length > 16) {
+          const toDelete = entries.slice(0, entries.length - 16);
+          for (const [key, value] of toDelete) {
+            imageCache.delete(key);
+          }
+        }
+      };
+
+      function ensureCacheEntry(data, beat) {
+        let entry = imageCache.get(beat);
+        if (!entry) {
+          const image = new Image();
+          image.crossOrigin = "anonymous";
+          const onLoadPromise = new Promise((resolve, reject) => {
+            image.addEventListener("load", () => {
+              console.log("Loaded", image.src);
+              entry.ready = true;
+              resolve();
+            });
+            image.addEventListener("error", reject);
+          });
+          image.src = `${base}/${data[beat].objectName}`;
+          entry = { image, lastUsed: Date.now(), ready: false, onLoadPromise };
+          imageCache.set(beat, entry);
+          // gcImageCache();
+        }
+        entry.lastUsed = Date.now();
+        return entry;
+      }
+
+      async function draw(items) {
+        const data = await dataPromise;
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, width, height);
+
+        let i = 0;
+        const nums = items.split(",");
+        for (const item of nums) {
+          const index = item - 1;
+          const entry = ensureCacheEntry(data, index);
+          await entry.onLoadPromise;
+          drawItem(i / nums.length, entry.image, data[index]);
+          i++;
+        }
+        // for (const beat of beatsToDraw) {
+        //   if (beat === -1) {
+        //     ctx.save();
+        //     ctx.fillStyle = "#000";
+        //     ctx.fillRect(0, 0, width, height);
+        //     continue;
+        //   }
+        //   const beatStartTime = (beat * 60) / 104;
+        //   const timeOffset = t - beatStartTime;
+        //   ctx.save();
+        //   try {
+        //     drawItem(beat, timeOffset, images.get(beat), data[beat]);
+        //   } finally {
+        //     ctx.restore();
+        //   }
+        // }
+      }
+      function drawItem(p, img, info) {
+        let slant = height;
+        const pp = p === 0 ? 0 : (p - 0.5) * 0.9 + 0.5;
+        const x = pp * (width + slant) - slant;
+
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + slant, height);
+        ctx.lineTo(x + slant + width, height);
+        ctx.lineTo(x + slant + width, 0);
+        ctx.clip();
+
+        // Image
+        if (img) {
+          ctx.drawImage(img, 0, 0, width, height);
+        }
+
+        // try {
+        //   ctx.save();
+        //   ctx.letterSpacing = "0.04em";
+        //   ctx.translate(16, ty);
+        //   ctx.strokeStyle = "#0008";
+        //   ctx.lineWidth = 10;
+        //   ctx.miterLimit = 2;
+        //   ctx.fillStyle = "#fff";
+        //   ctx.shadowColor = "black";
+        //   ctx.shadowBlur = 12;
+        //   ctx.shadowOffsetX = 2;
+        //   ctx.shadowOffsetY = 2;
+
+        //   const drawText = (text, x, y) => {
+        //     ctx.save();
+        //     ctx.translate(x, y);
+        //     ctx.rotate(Math.atan2(slant, width));
+        //     ctx.fillText(text, 0, 0);
+        //     ctx.restore();
+        //   };
+
+        //   const topText = `#${itemId + 1} ${info.themeLabel}`;
+        //   const bottomText = `“${info.extensionDisplayName}” by ${info.publisherDisplayName}`;
+
+        //   ctx.font = "bold 48px sans-serif";
+        //   drawText(topText, 0, -32);
+        //   ctx.font = "bold 24px sans-serif";
+        //   drawText(bottomText, 0, 8);
+        // } finally {
+        //   ctx.restore();
+        // }
+
+        // Line
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x + slant, height);
+        ctx.strokeStyle = "#0008";
+        ctx.lineWidth = 10;
+        ctx.stroke();
+      }
+
+      async function main() {
+        await draw("1,2,3,4,5,6,7,8,9,10,11,12");
+      }
+
+      main();
+    </script>
+  </body>
+</html>

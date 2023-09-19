@@ -1,0 +1,7 @@
+node_modules
+.pnpm-store
+*.png
+.data
+.env
+out
+.DS_Store

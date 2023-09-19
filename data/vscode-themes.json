@@ -1,0 +1,162 @@
+[
+  {
+    "extensionId": "github.github-vscode-theme",
+    "installs": "9360678",
+    "version": "6.3.4",
+    "themeName": "GitHub Light Default",
+    "themeLabel": "GitHub Light Default",
+    "extensionDisplayName": "GitHub Theme",
+    "publisherDisplayName": "GitHub",
+    "objectName": "extensions/github.github-vscode-theme/GitHub_20Light_20Default.screenshot.png"
+  },
+  {
+    "extensionId": "github.github-vscode-theme",
+    "installs": "9360678",
+    "version": "6.3.4",
+    "themeName": "GitHub Light High Contrast",
+    "themeLabel": "GitHub Light High Contrast",
+    "extensionDisplayName": "GitHub Theme",
+    "publisherDisplayName": "GitHub",
+    "objectName": "extensions/github.github-vscode-theme/GitHub_20Light_20High_20Contrast.screenshot.png"
+  },
+  {
+    "extensionId": "github.github-vscode-theme",
+    "installs": "9360678",
+    "version": "6.3.4",
+    "themeName": "GitHub Light Colorblind (Beta)",
+    "themeLabel": "GitHub Light Colorblind (Beta)",
+    "extensionDisplayName": "GitHub Theme",
+    "publisherDisplayName": "GitHub",
+    "objectName": "extensions/github.github-vscode-theme/GitHub_20Light_20Colorblind_20(Beta).screenshot.png"
+  },
+  {
+    "extensionId": "github.github-vscode-theme",
+    "installs": "9360678",
+    "version": "6.3.4",
+    "themeName": "GitHub Dark Default",
+    "themeLabel": "GitHub Dark Default",
+    "extensionDisplayName": "GitHub Theme",
+    "publisherDisplayName": "GitHub",
+    "objectName": "extensions/github.github-vscode-theme/GitHub_20Dark_20Default.screenshot.png"
+  },
+  {
+    "extensionId": "github.github-vscode-theme",
+    "installs": "9360678",
+    "version": "6.3.4",
+    "themeName": "GitHub Dark High Contrast",
+    "themeLabel": "GitHub Dark High Contrast",
+    "extensionDisplayName": "GitHub Theme",
+    "publisherDisplayName": "GitHub",
+    "objectName": "extensions/github.github-vscode-theme/GitHub_20Dark_20High_20Contrast.screenshot.png"
+  },
+  {
+    "extensionId": "github.github-vscode-theme",
+    "installs": "9360678",
+    "version": "6.3.4",
+    "themeName": "GitHub Dark Colorblind (Beta)",
+    "themeLabel": "GitHub Dark Colorblind (Beta)",
+    "extensionDisplayName": "GitHub Theme",
+    "publisherDisplayName": "GitHub",
+    "objectName": "extensions/github.github-vscode-theme/GitHub_20Dark_20Colorblind_20(Beta).screenshot.png"
+  },
+  {
+    "extensionId": "github.github-vscode-theme",
+    "installs": "9360678",
+    "version": "6.3.4",
+    "themeName": "GitHub Dark Dimmed",
+    "themeLabel": "GitHub Dark Dimmed",
+    "extensionDisplayName": "GitHub Theme",
+    "publisherDisplayName": "GitHub",
+    "objectName": "extensions/github.github-vscode-theme/GitHub_20Dark_20Dimmed.screenshot.png"
+  },
+  {
+    "extensionId": "github.github-vscode-theme",
+    "installs": "9360678",
+    "version": "6.3.4",
+    "themeName": "GitHub Light",
+    "themeLabel": "GitHub Light",
+    "extensionDisplayName": "GitHub Theme",
+    "publisherDisplayName": "GitHub",
+    "objectName": "extensions/github.github-vscode-theme/GitHub_20Light.screenshot.png"
+  },
+  {
+    "extensionId": "github.github-vscode-theme",
+    "installs": "9360678",
+    "version": "6.3.4",
+    "themeName": "GitHub Dark",
+    "themeLabel": "GitHub Dark",
+    "extensionDisplayName": "GitHub Theme",
+    "publisherDisplayName": "GitHub",
+    "objectName": "extensions/github.github-vscode-theme/GitHub_20Dark.screenshot.png"
+  },
+  {
+    "extensionId": "zhuangtongfa.material-theme",
+    "installs": "8037033",
+    "version": "3.16.0",
+    "themeName": "One Dark Pro",
+    "themeLabel": "One Dark Pro",
+    "extensionDisplayName": "One Dark Pro",
+    "publisherDisplayName": "binaryify",
+    "objectName": "extensions/zhuangtongfa.material-theme/One_20Dark_20Pro.screenshot.png"
+  },
+  {
+    "extensionId": "zhuangtongfa.material-theme",
+    "installs": "8037033",
+    "version": "3.16.0",
+    "themeName": "One Dark Pro Flat",
+    "themeLabel": "One Dark Pro Flat",
+    "extensionDisplayName": "One Dark Pro",
+    "publisherDisplayName": "binaryify",
+    "objectName": "extensions/zhuangtongfa.material-theme/One_20Dark_20Pro_20Flat.screenshot.png"
+  },
+  {
+    "extensionId": "zhuangtongfa.material-theme",
+    "installs": "8037033",
+    "version": "3.16.0",
+    "themeName": "One Dark Pro Darker",
+    "themeLabel": "One Dark Pro Darker",
+    "extensionDisplayName": "One Dark Pro",
+    "publisherDisplayName": "binaryify",
+    "objectName": "extensions/zhuangtongfa.material-theme/One_20Dark_20Pro_20Darker.screenshot.png"
+  },
+  {
+    "extensionId": "zhuangtongfa.material-theme",
+    "installs": "8037033",
+    "version": "3.16.0",
+    "themeName": "One Dark Pro Mix",
+    "themeLabel": "One Dark Pro Mix",
+    "extensionDisplayName": "One Dark Pro",
+    "publisherDisplayName": "binaryify",
+    "objectName": "extensions/zhuangtongfa.material-theme/One_20Dark_20Pro_20Mix.screenshot.png"
+  },
+  {
+    "extensionId": "dracula-theme.theme-dracula",
+    "installs": "5937139",
+    "version": "2.24.3",
+    "themeName": "Dracula",
+    "themeLabel": "Dracula",
+    "extensionDisplayName": "Dracula Official",
+    "publisherDisplayName": "Dracula Theme",
+    "objectName": "extensions/dracula-theme.theme-dracula/Dracula.screenshot.png"
+  },
+  {
+    "extensionId": "dracula-theme.theme-dracula",
+    "installs": "5937139",
+    "version": "2.24.3",
+    "themeName": "Dracula Soft",
+    "themeLabel": "Dracula Soft",
+    "extensionDisplayName": "Dracula Official",
+    "publisherDisplayName": "Dracula Theme",
+    "objectName": "extensions/dracula-theme.theme-dracula/Dracula_20Soft.screenshot.png"
+  },
+  {
+    "extensionId": "akamud.vscode-theme-onedark",
+    "installs": "4690638",
+    "version": "2.3.0",
+    "themeName": "Atom One Dark",
+    "themeLabel": "Atom One Dark",
+    "extensionDisplayName": "Atom One Dark Theme",
+    "publisherDisplayName": "Mahmoud Ali",
+    "objectName": "extensions/akamud.vscode-theme-onedark/Atom_20One_20Dark.screenshot.png"
+  }
+]
